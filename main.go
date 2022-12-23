@@ -41,10 +41,10 @@ func main() {
 		// evaluation
 		src.EvaluateDice(&players)
 
-		isPlaying = false
 		count++
+		isPlaying = !src.CheckGameOver(&players)
+		fmt.Println("==================")
 	}
-	fmt.Println("==================")
 
 	// fmt.Println(players)
 

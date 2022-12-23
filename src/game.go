@@ -84,3 +84,17 @@ func PrintPlayersStats(players *[]Player) {
 		fmt.Printf("\tPemain #%d (%d): %s\n", i+1, player.Point, dice)
 	}
 }
+
+func CheckGameOver(players *[]Player) bool {
+	outOfGameCount := 0
+
+	for i := 0; i < len(*players); i++ {
+		player := &(*players)[i]
+		if len(player.Dice) == 0 {
+			outOfGameCount++
+		}
+	}
+	// fmt.Printf("outOfGame %d\n", outOfGameCount)
+
+	return outOfGameCount >= len(*players)-1
+}
