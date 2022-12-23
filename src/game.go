@@ -3,9 +3,11 @@ package src
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 func RollDice(players *[]Player) {
+	rand.Seed(time.Now().UTC().UnixNano())
 	for i := 0; i < len(*players); i++ {
 		player := &(*players)[i]
 
@@ -22,7 +24,9 @@ func RollDice(players *[]Player) {
 }
 
 func EvaluateDice(players *[]Player) {
-	for i := 0; i < len(*players); i++ {
+	playersLen := len(*players)
+
+	for i := 0; i < playersLen; i++ {
 		player := &(*players)[i]
 
 		// count point and eliminating dice
@@ -44,12 +48,16 @@ func EvaluateDice(players *[]Player) {
 	}
 
 	// passing the temp dice
-	for i := 0; i < len(*players); i++ {
+	for i := 0; i < playersLen; i++ {
 		player := &(*players)[i]
 
 		increment := 1
 		for {
-			nextPlayer := &(*players)[(i+increment)%len(*players)]
+			nextPlayerIdx := (i + increment) % playersLen
+			if nextPlayerIdx == i {
+				break
+			}
+			nextPlayer := &(*players)[nextPlayerIdx]
 			if len(nextPlayer.Dice) == 0 {
 				increment++
 				continue
@@ -66,7 +74,8 @@ func EvaluateDice(players *[]Player) {
 }
 
 func PrintPlayersStats(players *[]Player) {
-	for i := 0; i < len(*players); i++ {
+	playersLen := len(*players)
+	for i := 0; i < playersLen; i++ {
 		player := (*players)[i]
 
 		dice := ""
@@ -90,7 +99,9 @@ func CheckGameOver(players *[]Player) (bool, int) {
 	theNumberOfPlayers := make([]int, 0)
 	lastStand := -1
 
-	for i := 0; i < len(*players); i++ {
+	playersLen := len(*players)
+
+	for i := 0; i < playersLen; i++ {
 		player := &(*players)[i]
 		if len(player.Dice) == 0 {
 			outOfGameCount++
@@ -99,7 +110,7 @@ func CheckGameOver(players *[]Player) (bool, int) {
 		}
 	}
 	// fmt.Printf("outOfGame %d\n", outOfGameCount)
-	gameOver := outOfGameCount >= len(*players)-1
+	gameOver := outOfGameCount >= playersLen-1
 
 	// find the last stand one
 	if gameOver {
