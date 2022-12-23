@@ -85,16 +85,43 @@ func PrintPlayersStats(players *[]Player) {
 	}
 }
 
-func CheckGameOver(players *[]Player) bool {
+func CheckGameOver(players *[]Player) (bool, int) {
 	outOfGameCount := 0
+	theNumberOfPlayers := make([]int, 0)
+	lastStand := -1
 
 	for i := 0; i < len(*players); i++ {
 		player := &(*players)[i]
 		if len(player.Dice) == 0 {
 			outOfGameCount++
+		} else {
+			theNumberOfPlayers = append(theNumberOfPlayers, i)
 		}
 	}
 	// fmt.Printf("outOfGame %d\n", outOfGameCount)
+	gameOver := outOfGameCount >= len(*players)-1
 
-	return outOfGameCount >= len(*players)-1
+	// find the last stand one
+	if gameOver {
+		lastStand = theNumberOfPlayers[0]
+	}
+
+	return gameOver, lastStand + 1
+}
+
+func MostPointsPlayers(players *[]Player) *[]int {
+	highestPoint := -1
+	newPlayers := make([]int, 0)
+
+	for i := 0; i < len(*players); i++ {
+		player := &(*players)[i]
+		if player.Point > highestPoint {
+			highestPoint = player.Point
+			newPlayers = []int{i + 1}
+		} else if player.Point == highestPoint {
+			newPlayers = append(newPlayers, i+1)
+		}
+	}
+
+	return &newPlayers
 }

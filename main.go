@@ -12,8 +12,8 @@ func RemoveIndex(s []int, index int) []int {
 
 func main() {
 
-	var N = flag.Int64("N", 0, "type your N")
-	var M = flag.Int64("M", 0, "type your M")
+	var N = flag.Int64("N", 2, "type your N")
+	var M = flag.Int64("M", 2, "type your M")
 	flag.Parse()
 
 	fmt.Printf("Pemain = %d, Dadu = %d\n", *N, *M)
@@ -29,6 +29,7 @@ func main() {
 	// fmt.Println(players)
 
 	isPlaying := true
+	lastStand := -1
 	count := 1
 
 	fmt.Println("==================")
@@ -41,11 +42,24 @@ func main() {
 		// evaluation
 		src.EvaluateDice(&players)
 
-		count++
-		isPlaying = !src.CheckGameOver(&players)
 		fmt.Println("==================")
+
+		count++
+		isGameOver, lastStandPlayer := src.CheckGameOver(&players)
+		isPlaying = !isGameOver
+		lastStand = lastStandPlayer
 	}
 
-	// fmt.Println(players)
+	mostPointsPlayers := src.MostPointsPlayers(&players)
+	winner := ""
+	for i := 0; i < len(*mostPointsPlayers); i++ {
+		winner += fmt.Sprintf("#%d", (*mostPointsPlayers)[i])
 
+		if i < len(*mostPointsPlayers)-1 {
+			winner += ", "
+		}
+	}
+
+	fmt.Printf("Game berakhir karena hanya pemain #%d yang memiliki dadu.\n", lastStand)
+	fmt.Printf("Game dimenangkan oleh pemain %s karena memiliki poin lebih banyak dari pemain lainnya.", winner)
 }
