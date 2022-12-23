@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"math/rand"
 	"qoin-dadu/src"
 )
 
@@ -37,43 +36,16 @@ func main() {
 		fmt.Printf("Giliran %d lempar dadu:\n", count)
 
 		// players rolling the dice
-		for i := 0; i < len(players); i++ {
-			player := players[i]
-
-			// rolling the dice
-			for j := 0; j < len(player.Dice); j++ {
-				result := rand.Intn(6) + 1
-				// fmt.Println(result)
-				player.Dice[j] = result
-			}
-		}
+		src.RollDice(&players)
 
 		// evaluation
-		for i := 0; i < len(players); i++ {
-			player := &players[i]
-
-			// count point and eliminating dice
-			remainingDice := []int{}
-			tempDice := []int{}
-			for j := 0; j < len(player.Dice); j++ {
-				dice := player.Dice[j]
-				// fmt.Println(dice)
-				if dice == 6 {
-					player.Point++
-				} else if dice == 1 {
-					tempDice = append(tempDice, dice)
-				} else {
-					remainingDice = append(remainingDice, dice)
-				}
-			}
-			player.Dice = remainingDice
-			player.TempDice = tempDice
-		}
+		src.EvaluateDice(&players)
 
 		isPlaying = false
 		count++
 	}
+	fmt.Println("==================")
 
-	fmt.Println(players)
+	// fmt.Println(players)
 
 }
